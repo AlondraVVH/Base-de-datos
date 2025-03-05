@@ -1,0 +1,24 @@
+--Tabla TipoUsuario
+SELECT * FROM TipoUsuario;
+
+--Tabla Usuario
+SELECT * FROM Usuarios;
+
+--Tabla Paciente
+SELECT * FROM Pacientes;
+
+--Tabla Medico
+SELECT * FROM Medicos;
+
+--Tabla Consulta
+SELECT * FROM Consultas;
+
+--Tabla Tratamiento
+SELECT * FROM Tratamientos;
+
+--Tabla ConsultaTratamiento
+SELECT * FROM ConsultaTratamiento;
+
+--Tabla Cita
+SELECT * FROM Citas;
+
