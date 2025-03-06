@@ -32,6 +32,6 @@ SET SQL_SAFE_UPDATES = 1; -- activa el modo seguro
 
 DELETE FROM Pacientes WHERE idUsuario = 2;
 DELETE FROM Medicos WHERE idMedico = 6;
-DELETE FROM ConsultaTratamiento WHERE idConsulta = 3;
+DELETE FROM Citas WHERE idCita = 4;
 DELETE FROM Consultas WHERE idConsulta = 3;
-DELETE FROM Usuarios WHERE idUsuario = 2;
+DELETE FROM Usuarios WHERE idTipoUsuario = 6;

@@ -3,15 +3,16 @@
 INSERT INTO TipoUsuario (nombre) VALUES 
 ('Paciente'), ('Médico'), ('Administrativo'), ('Enfermero'), ('Técnico'), ('Recepcionista'), ('Especialista');
 
--- Tabla Usuarios
-INSERT INTO Usuarios (nombre, correo, telefono, idTipoUsuario) VALUES
-('Juan Pérez', 'juan@example.com', '123456789', 1),
-('Dr. Carlos López', 'carlos@example.com', '987654321', 2),
-('Ana Gómez', 'ana@example.com', '555555555', 3),
-('Luisa Martínez', 'luisa@example.com', '111111111', 1),
-('Dr. Pedro Sánchez', 'pedro@example.com', '222222222', 2),
-('María Torres', 'maria@example.com', '333333333', 1),
-('Dr. Roberto Díaz', 'roberto@example.com', '444444444', 2);
+
+
+INSERT INTO Usuarios (nombre, rut, correo, telefono, idTipoUsuario) VALUES
+('Juan Pérez', '12345678-9', 'juan@example.com', '123456789', 1),
+('Dr. Carlos López', '23456789-0', 'carlos@example.com', '987654321', 2),
+('Ana Gómez', '34567890-1', 'ana@example.com', '555555555', 3),
+('Luisa Martínez', '45678901-2', 'luisa@example.com', '111111111', 1),
+('Dr. Pedro Sánchez', '56789012-3', 'pedro@example.com', '222222222', 2),
+('María Torres', '67890123-4', 'maria@example.com', '333333333', 1),
+('Dr. Roberto Díaz', '78901234-5', 'roberto@example.com', '444444444', 2);
 
 -- Tabla Pacientes
 INSERT INTO Pacientes (idUsuario, fechaNacimiento) VALUES
@@ -29,7 +30,7 @@ INSERT INTO Medicos (idUsuario, especialidad) VALUES
 (6, 'Neurología');
 
 -- Tabla Consultas
-INSERT INTO Consultas (idMedico, idPaciente, fecha, hora, motivo, diagnostico) VALUES
+INSERT INTO Consultas (idMedico, idPaciente, idTratamiento, fecha, hora, motivo, diagnostico) VALUES
 (1, 1, '2023-10-01', '10:00:00', 'Dolor de pecho', 'Angina de pecho'),
 (2, 2, '2023-10-02', '11:00:00', 'Fiebre alta', 'Gripe'),
 (3, 3, '2023-10-03', '12:00:00', 'Dolor de cabeza', 'Migraña'),
@@ -48,15 +49,6 @@ INSERT INTO Tratamientos (nombre, descripcion) VALUES
 ('Analgésicos', 'Alivio del dolor moderado'),
 ('Antibióticos', 'Tratamiento contra infecciones');
 
--- Tabla ConsultaTratamiento
-INSERT INTO ConsultaTratamiento (idConsulta, idTratamiento) VALUES
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5),
-(6, 6),
-(7, 7);
 
 -- Tabla Citas
 INSERT INTO Citas (idPaciente, fecha, hora, estado) VALUES

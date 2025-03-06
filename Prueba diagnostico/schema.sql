@@ -12,6 +12,7 @@ CREATE TABLE TipoUsuario (
 CREATE TABLE Usuarios (
     idUsuario INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
+    rut VARCHAR(12) NOT NULL UNIQUE, 
     correo VARCHAR(100) NOT NULL UNIQUE,
     telefono VARCHAR(15),
     idTipoUsuario INT,
@@ -39,6 +40,7 @@ CREATE TABLE Consultas (
     idConsulta INT PRIMARY KEY AUTO_INCREMENT,
     idMedico INT,
     idPaciente INT,
+    idTratamiento INT,
     fecha DATE NOT NULL,
     hora TIME NOT NULL,
     motivo TEXT,
@@ -54,14 +56,6 @@ CREATE TABLE Tratamientos (
     descripcion TEXT
 );
 
--- Tabla ConsultaTratamiento
-CREATE TABLE ConsultaTratamiento (
-    idConsulta INT,
-    idTratamiento INT,
-    PRIMARY KEY (idConsulta, idTratamiento),
-    FOREIGN KEY (idConsulta) REFERENCES Consultas(idConsulta),
-    FOREIGN KEY (idTratamiento) REFERENCES Tratamientos(idTratamiento)
-);
 
 -- Tabla Citas
 CREATE TABLE Citas (
