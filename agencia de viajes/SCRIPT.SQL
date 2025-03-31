@@ -2,7 +2,7 @@ DROP DATABASE IF EXISTS TravelAgenda;
 CREATE DATABASE TravelAgenda;
 USE TravelAgenda;
 
-CREATE TABLE Tipo_Usuario (
+CREATE TABLE Tipos_Usuarios (
     id_tipo_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nombre_tipo VARCHAR(50) NOT NULL,
     descripcion TEXT,
@@ -12,7 +12,7 @@ CREATE TABLE Tipo_Usuario (
     USER_ID INT
 );
 
-CREATE TABLE Usuario (
+CREATE TABLE Usuarios (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE Ubicacion (
     FOREIGN KEY (USER_ID) REFERENCES Usuario(id_usuario)
 );
 
-CREATE TABLE Aeropuerto (
+CREATE TABLE Aeropuertos (
     id_aeropuerto INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     codigo_iata VARCHAR(10) UNIQUE NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE Aeropuerto (
     FOREIGN KEY (USER_ID) REFERENCES Usuario(id_usuario)
 );
 
-CREATE TABLE Estado_Vuelo (
+CREATE TABLE Estados_Vuelos (
     id_estado_vuelo INT AUTO_INCREMENT PRIMARY KEY,
     estado VARCHAR(50) NOT NULL,
     CREATED DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -59,7 +59,7 @@ CREATE TABLE Estado_Vuelo (
     USER_ID INT
 );
 
-CREATE TABLE Clase_Vuelo (
+CREATE TABLE Clases_Vuelos (
     id_clase_vuelo INT AUTO_INCREMENT PRIMARY KEY,
     clase VARCHAR(50) NOT NULL,
     CREATED DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -68,7 +68,7 @@ CREATE TABLE Clase_Vuelo (
     USER_ID INT
 );
 
-CREATE TABLE Vuelo (
+CREATE TABLE Vuelos (
     id_vuelo INT AUTO_INCREMENT PRIMARY KEY,
     numero_vuelo VARCHAR(20) UNIQUE NOT NULL,
     aerolinea VARCHAR(100) NOT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE Vuelo (
     FOREIGN KEY (USER_ID) REFERENCES Usuario(id_usuario)
 );
 
-CREATE TABLE Vuelo_Programado (
+CREATE TABLE Vuelos_Programados (
     id_vuelo_programado INT AUTO_INCREMENT PRIMARY KEY,
     id_vuelo INT NOT NULL,
     id_estado_vuelo INT NOT NULL,
@@ -100,7 +100,7 @@ CREATE TABLE Vuelo_Programado (
     FOREIGN KEY (USER_ID) REFERENCES Usuario(id_usuario)
 );
 
-CREATE TABLE Escala (
+CREATE TABLE Escalas (
     id_escala INT AUTO_INCREMENT PRIMARY KEY,
     id_vuelo_programado INT NOT NULL,
     id_aeropuerto INT NOT NULL,
@@ -115,7 +115,7 @@ CREATE TABLE Escala (
     FOREIGN KEY (USER_ID) REFERENCES Usuario(id_usuario)
 );
 
-CREATE TABLE Reserva (
+CREATE TABLE Reservas (
     id_reserva INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT NOT NULL,
     fecha_hora_reserva DATETIME NOT NULL,
@@ -129,7 +129,7 @@ CREATE TABLE Reserva (
     FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
 );
 
-CREATE TABLE Reserva_Vuelo (
+CREATE TABLE Reservas_Vuelos (
     id_reserva_vuelo INT AUTO_INCREMENT PRIMARY KEY,
     id_reserva INT NOT NULL,
     id_vuelo_programado INT NOT NULL,
@@ -142,7 +142,7 @@ CREATE TABLE Reserva_Vuelo (
     FOREIGN KEY (USER_ID) REFERENCES Usuario(id_usuario)
 );
 
-CREATE TABLE Asiento (
+CREATE TABLE Asientos (
     id_asiento INT AUTO_INCREMENT PRIMARY KEY,
     id_reserva_vuelo INT NOT NULL,
     numero_asiento VARCHAR(10) NOT NULL,
