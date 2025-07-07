@@ -1,0 +1,54 @@
+-- 1.- Mostrar todos los usuarios de tipo Cliente
+SELECT u.username,
+    u.email,
+    t.nombre_tipo
+FROM usuarios u,
+    tipo_usuarios t
+WHERE u.id_tipo_usuario = t.id_tipo
+    AND t.nombre_tipo = 'Cliente';
+
+-- 2.- Mostrar Personas nacidas después del año 1990
+SELECT p.nombre_completo,
+    p.fecha_nac,
+    u.username
+FROM personas p,
+    usuarios u
+WHERE p.id_usuario = u.id_usuario
+    AND YEAR(p.fecha_nac) > 1990;
+
+-- 3.- Seleccionar nombres de personas que comiencen con 'A'
+SELECT p.nombre_completo,
+    u.email
+FROM personas p,
+    usuarios u
+WHERE p.id_usuario = u.id_usuario
+    AND p.nombre_completo LIKE 'A%';
+
+-- 4.- Mostrar usuarios cuyos correos sean mail.com
+SELECT username,
+    email
+FROM usuarios
+WHERE email LIKE '%mail.com';
+
+-- 5.- Mostrar personas que NO vivan en Valparaíso (ID = 2)
+SELECT p.nombre_completo,
+    u.username,
+    c.nombre_ciudad
+FROM personas p,
+    usuarios u,
+    ciudad c
+WHERE p.id_usuario = u.id_usuario
+    AND p.id_ciudad = c.id_ciudad
+    AND c.id_ciudad <> 2;
+
+-- 6.- Mostrar usuarios con username > 7 caracteres
+SELECT username
+FROM usuarios
+WHERE CHAR_LENGTH(username) > 7;
+
+-- 7.- Mostrar username de personas nacidas entre 1990 y 1995
+SELECT u.username
+FROM personas p,
+    usuarios u
+WHERE p.id_usuario = u.id_usuario
+    AND p.fecha_nac BETWEEN '1990-01-01' AND '1995-12-31';
