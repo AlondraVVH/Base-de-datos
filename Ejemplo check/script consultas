@@ -14,7 +14,7 @@ SELECT p.nombre_completo,
 FROM personas p,
     usuarios u
 WHERE p.id_usuario = u.id_usuario
-    AND YEAR(p.fecha_nac) > 1990;
+    AND YEAR(p.fecha_nac) >= 1990;
 
 -- 3.- Seleccionar nombres de personas que comiencen con 'A'
 SELECT p.nombre_completo,
