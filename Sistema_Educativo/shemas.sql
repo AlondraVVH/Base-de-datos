@@ -1,50 +1,36 @@
 -- **************************************************
--- Script 1: Creación de la Base de Datos y Tablas (NORMALIZADO CON CATALOGOS)
--- Autor: [Tu Nombre]
--- Fecha: 2025-10-06
--- Objetivo: Crear el esquema 'sistemaeducativo' reemplazando los tipos ENUM
---           por tablas de catálogo para mayor flexibilidad.
+-- Script 1: Creación de la Base de Datos y Tablas (NORMALIZADO CON CHECK MEJORADO)
 -- **************************************************
 
 CREATE DATABASE IF NOT EXISTS sistemaeducativo;
 USE sistemaeducativo;
 
 -- --------------------------------------------------
--- 1. TABLAS DE CATÁLOGO (Reemplazando ENUM)
+-- 1. TABLAS DE CATÁLOGO
 -- --------------------------------------------------
 
--- --- Nueva Tabla: estados_inscripcion ---
--- Catálogo de posibles estados para una matrícula en un curso.
 CREATE TABLE estados_inscripcion (
     id_estado_inscripcion INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    nombre_estado VARCHAR(50) NOT NULL UNIQUE, -- Ej: 'Inscrito', 'Finalizado'
+    nombre_estado VARCHAR(50) NOT NULL UNIQUE,
     descripcion TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- --- Nueva Tabla: tipos_contenido ---
--- Catálogo de posibles tipos de recursos dentro de un curso.
 CREATE TABLE tipos_contenido (
     id_tipo_contenido INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    nombre_tipo VARCHAR(50) NOT NULL UNIQUE, -- Ej: 'Video', 'Documento', 'Quiz'
+    nombre_tipo VARCHAR(50) NOT NULL UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- --- Nueva Tabla: estados_progreso ---
--- Catálogo de posibles estados de avance de un estudiante en un contenido.
 CREATE TABLE estados_progreso (
     id_estado_progreso INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    nombre_estado VARCHAR(50) NOT NULL UNIQUE, -- Ej: 'No Iniciado', 'Completado'
+    nombre_estado VARCHAR(50) NOT NULL UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- --------------------------------------------------
 -- 2. TABLAS BASE
 -- --------------------------------------------------
-
--- Las tablas 'roles', 'usuarios', 'instituciones', 'profesores',
--- 'estudiantes' y 'relacion_profesor_estudiante' permanecen sin cambios
--- ya que no contenían campos ENUM que deban ser normalizados.
 
 -- --- Tabla 1: roles ---
 CREATE TABLE roles (
@@ -73,7 +59,9 @@ CREATE TABLE usuarios (
     updated_by INT,
     deleted TINYINT(1) DEFAULT 0,
     
-    FOREIGN KEY (id_rol) REFERENCES roles(id_rol)
+    FOREIGN KEY (id_rol) REFERENCES roles(id_rol),
+    -- MEJORA: Restricción CHECK explícita para el formato mínimo del RUT.
+    CONSTRAINT chk_rut_formato CHECK (LENGTH(rut) >= 7)
 );
 
 -- --- Tabla 3: instituciones ---
@@ -103,7 +91,9 @@ CREATE TABLE profesores (
     deleted TINYINT(1) DEFAULT 0,
     
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
-    FOREIGN KEY (id_institucion) REFERENCES instituciones(id_institucion)
+    FOREIGN KEY (id_institucion) REFERENCES instituciones(id_institucion),
+    -- MEJORA: Restricción CHECK para asegurar una edad realista.
+    CONSTRAINT chk_edad_profesor CHECK (edad > 20 AND edad < 100)
 );
 
 -- --- Tabla 5: estudiantes ---
@@ -151,14 +141,13 @@ CREATE TABLE cursos_capacitacion (
 -- 3. TABLAS CON REFERENCIAS A CATÁLOGOS
 -- --------------------------------------------------
 
--- --- Tabla 8: inscripcion_cursos (MODIFICADA) ---
--- El campo 'estado' ahora es 'id_estado_inscripcion' con clave foránea.
+-- --- Tabla 8: inscripcion_cursos ---
 CREATE TABLE inscripcion_cursos (
     id_curso INT NOT NULL,
     id_estudiante_usuario INT NOT NULL,
     id_profesor_usuario INT,
     fecha_inscripcion DATE NOT NULL,
-    id_estado_inscripcion INT NOT NULL, -- REEMPLAZA ENUM('Inscrito', 'En Progreso', 'Finalizado', 'Anulado')
+    id_estado_inscripcion INT NOT NULL,
     calificacion_final DECIMAL(5, 2) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -170,17 +159,18 @@ CREATE TABLE inscripcion_cursos (
     FOREIGN KEY (id_curso) REFERENCES cursos_capacitacion(id_curso),
     FOREIGN KEY (id_estudiante_usuario) REFERENCES estudiantes(id_usuario),
     FOREIGN KEY (id_profesor_usuario) REFERENCES profesores(id_usuario),
-    FOREIGN KEY (id_estado_inscripcion) REFERENCES estados_inscripcion(id_estado_inscripcion)
+    FOREIGN KEY (id_estado_inscripcion) REFERENCES estados_inscripcion(id_estado_inscripcion),
+    -- Restricción CHECK explícita para rango de calificación.
+    CONSTRAINT chk_calificacion_rango CHECK (calificacion_final IS NULL OR (calificacion_final >= 1.0 AND calificacion_final <= 7.0))
 );
 
--- --- Tabla 9: contenidos (MODIFICADA) ---
--- El campo 'tipo_contenido' ahora es 'id_tipo_contenido' con clave foránea.
+-- --- Tabla 9: contenidos ---
 CREATE TABLE contenidos (
     id_contenido INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id_curso INT NOT NULL,
     titulo VARCHAR(255) NOT NULL,
     descripcion TEXT,
-    id_tipo_contenido INT, -- REEMPLAZA ENUM('Video', 'Documento', 'Quiz', 'Actividad')
+    id_tipo_contenido INT,
     url_recurso VARCHAR(2048),
     visible_para_todos TINYINT(1) DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -193,15 +183,14 @@ CREATE TABLE contenidos (
     FOREIGN KEY (id_tipo_contenido) REFERENCES tipos_contenido(id_tipo_contenido)
 );
 
--- --- Tabla 10: progreso_contenido_estudiante (MODIFICADA) ---
--- El campo 'estado_progreso' ahora es 'id_estado_progreso' con clave foránea.
+-- --- Tabla 10: progreso_contenido_estudiante ---
 CREATE TABLE progreso_contenido_estudiante (
     id_estudiante_usuario INT NOT NULL,
     id_contenido INT NOT NULL,
     fecha_ultima_acceso DATETIME,
     fecha_completado DATETIME NULL,
     calificacion DECIMAL(5, 2) NULL,
-    id_estado_progreso INT NOT NULL, -- REEMPLAZA ENUM('No Iniciado', 'En Progreso', 'Completado')
+    id_estado_progreso INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
