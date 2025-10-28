@@ -13,8 +13,9 @@ from mysql.connector import errorcode
 DB_CONFIG = {
     "host": "localhost",
     "user": "root",
-    "password": "1234",
-    "database": "sistemaeducativo"
+    "password": "1234",         # Tu contraseña
+    "database": "sistemaeducativo", # Tu base de datos
+    "connection_timeout": 5     # AÑADE ESTA LÍNEA
 }
 
 # ---------- FUNCIÓN DE CONEXIÓN ----------

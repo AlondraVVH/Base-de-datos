@@ -50,19 +50,30 @@ def sp_listar_contenidos_activos():
     """Llama a SP_SELECT_ACTIVOS_CONTENIDOS"""
     cnx = cur = None
     try:
+        print("DEBUG: Intentando conectar...")
         cnx = conectar()
         if cnx is None: return
+        
+        print("DEBUG: Conexión exitosa. Creando cursor...")
         cur = cnx.cursor()
-        cur.callproc("SP_SELECT_ACTIVOS_CONTENIDOS")
+        
+        print("DEBUG: Llamando al procedimiento SP_SELECT_ACTIVOS_CONTENIDOS...")
+        cur.callproc("SP_SELECT_ACTIVOS_CONTENIDOS") # <-- Sospechamos que se congela aquí
+        
+        print("DEBUG: Procedimiento ejecutado. Procesando resultados...")
         print("\n--- CONTENIDOS ACTIVOS ---")
+        
         for result in cur.stored_results():
             rows = result.fetchall()
             if not rows:
                 print("No se encontraron contenidos activos.")
                 continue
             for (id_c, curso, titulo, tipo) in rows:
-                tipo_str = tipo if tipo else "N/A"
+                tipo_str = tipo if tipo else "N/A" 
                 print(f"ID:{id_c:<4} | Curso:{curso:<25} | Titulo:{titulo:<30} | Tipo:{tipo_str}")
+        
+        print("DEBUG: Fin de la función.")
+
     except mysql.connector.Error as e:
         print(f"❌ Error en sp_listar_contenidos_activos: {e}")
     finally:
@@ -84,6 +95,7 @@ def sp_listar_contenidos_todos():
                 print("No se encontraron contenidos.")
                 continue
             for row in rows:
+                # El campo 'deleted' es el índice 11
                 estado = "ELIMINADO" if row[11] == 1 else "ACTIVO"
                 print(f"ID:{row[0]:<4} | ID Curso:{row[1]:<4} | Titulo:{row[2]:<30} | Estado:{estado:<10}")
     except mysql.connector.Error as e:
